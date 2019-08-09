@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h1>Hellooooo from web app, we can add a description according to our project</h1>
+<h1>Web Application, we can add a description according to our project</h1>
 </body>
 </html>
