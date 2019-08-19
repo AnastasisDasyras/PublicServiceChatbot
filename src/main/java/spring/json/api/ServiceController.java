@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
@@ -23,23 +24,29 @@ public class ServiceController {
 
 
 	@PostMapping("/serve")
-	public String serve(HttpServletRequest request) throws IOException {
+	public byte[] serve(HttpServletRequest request) throws IOException {
+		
 
-
+		request.setCharacterEncoding("UTF8");
+		
+		
 		String reqObject = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 		System.out.println("request json object = "+reqObject);
+
 
 		//Get the service
 		JSONObject obj = new JSONObject(reqObject);
 		String service = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Services");
 		System.out.println(service);
 		String response = "{\"fulfillmentText\": \"I will send you information about "+service+"\""+"}";
+		byte[] enc = response.getBytes("UTF-8");
+		
 		
 		//Get service cost
-		ServiceResponse sr = new ServiceResponse(service);
-		String cost = sr.getCost();
-		System.out.println("cost: "+cost);
-
-		return response;
+		//ServiceResponse sr = new ServiceResponse(service);
+		//String cost = sr.getCost();
+		//System.out.println("cost: "+cost);
+		return enc;
+		
 	}
 }
