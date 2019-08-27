@@ -47,7 +47,7 @@ public class ServiceController {
 			response = "{\"fulfillmentText\": \"I did not find \""+"}";
 		}
 		
-		System.out.println(service);
+		//System.out.println(Life_event_house);
 		
 		byte[] enc = response.getBytes("UTF-8");
 		
