@@ -38,9 +38,10 @@ public class ServiceController {
 		JSONObject obj = new JSONObject(reqObject);
 		//obj = obj.getJSONObject("queryResult").getJSONObject("parameters");
 		String response = "null";
+		String Life_event_house = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("House");
 		
-		if (obj.has("House")) {
-			String Life_event_house = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("House");
+		if (!(Life_event_house.isEmpty() || Life_event_house== null)) {
+			//String Life_event_house = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("House");
 			response = "{\"fulfillmentText\": \"I will send you information about "+Life_event_house+"\""+"}";
 		}
 		else{
