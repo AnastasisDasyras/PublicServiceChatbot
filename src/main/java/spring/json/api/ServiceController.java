@@ -36,7 +36,8 @@ public class ServiceController {
 
 		//Get the service
 		JSONObject obj = new JSONObject(reqObject);
-		String service = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Services");
+		String service = "A";
+		//obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Services");
 		System.out.println(service);
 		String response = "{\"fulfillmentText\": \"I will send you information about "+service+"\""+"}";
 		byte[] enc = response.getBytes("UTF-8");
