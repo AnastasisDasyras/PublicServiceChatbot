@@ -36,10 +36,19 @@ public class ServiceController {
 
 		//Get the service
 		JSONObject obj = new JSONObject(reqObject);
-		String service = "A";
-		//obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Services");
+		obj = obj.getJSONObject("queryResult").getJSONObject("parameters");
+		String response = "null";
+		
+		if (obj.has("House")) {
+			String Life_event_house = obj.getString("House");
+			response = "{\"fulfillmentText\": \"I will send you information about "+Life_event_house+"\""+"}";
+		}
+		else{
+			response = "{\"fulfillmentText\": \"I did not find \""+"}";
+		}
+		
 		System.out.println(service);
-		String response = "{\"fulfillmentText\": \"I will send you information about "+service+"\""+"}";
+		
 		byte[] enc = response.getBytes("UTF-8");
 		
 		
