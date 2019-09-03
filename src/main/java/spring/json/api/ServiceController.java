@@ -105,16 +105,15 @@ public class ServiceController {
 	}
 	
 	public static String getCostFromPS(String PS_URI){
-        String s2 = "prefix dct: <http://purl.org/dc/terms/>\n" +
-                    "prefix cv: <http://data.europa.eu/m8g/>\n" +
-                    "select ?PSname ?cost_value\n" +
+        String s2 = "prefix cv: <http://data.europa.eu/m8g/>\n" +
+                    "select distinct ?PS_cost\n" +
                     "where{\n" +
-                    "?x cv:sector \"M71.1.2 - Engineering activities and related technical consultancy\".\n" +
-                    "?x cv:hasCost ?cost.\n" +
-                    "?cost cv:value ?cost_value.\n" +
-                    "?x dct:title ?PSname.}\n" +
-                    "ORDER BY(?PSname) limit 1" +
-                                    "";
+                    "<http://data.dai.uom.gr:8890/PublicServices/id/ps/"+PS_URI+"> cv:hasCost ?PS_cost .\n" +
+                    "}\n" +
+	            "";
+		
+		
+		
         Query query = QueryFactory.create(s2); //s2 = the query above
         QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.dai.uom.gr:8890/sparql", query );
         ResultSet results = qExe.execSelect();
