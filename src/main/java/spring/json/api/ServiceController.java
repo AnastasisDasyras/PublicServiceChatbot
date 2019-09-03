@@ -46,22 +46,45 @@ public class ServiceController {
 		}
 		else if(intent.equals("LE - Divorce")){
 			String divorse = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Divorce");
+			String endpoint_response = getPSFromLE(divorse);
+			
+			response = "{\"fulfillmentText\": \"Οι σχετικές με το διαζύγιο Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
 			System.out.println(divorse);
 		}
 		else if(intent.equals("LE - Lost Wallet")) {
 			String wallet = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Wallet");
+			
+			String endpoint_response = getPSFromLE(wallet);
+			
+			response = "{\"fulfillmentText\": \"Οι σχετικές με την απώλεια πορτοφολιου σας Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
+			
 			System.out.println(wallet);
 		}
 		else if(intent.equals("LE - School Life")) {
 			String schoolLife = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("SchoolLife");
+			
+			String endpoint_response = getPSFromLE(schoolLife);
+			
+			response = "{\"fulfillmentText\": \"Οι σχετικές με την Σχολική Ζωή σας Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
+			
 			System.out.println(schoolLife);
 		}
 		else if(intent.equals("LE - Travel")) {
 			String travel = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Travel");
+			
+			String endpoint_response = getPSFromLE(travel);
+			
+			response = "{\"fulfillmentText\": \"Οι σχετικές με Ταξίδι Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
+			
 			System.out.println(travel);
 		}
 		else if(intent.equals("LE - Wedding")){
 			String wedding = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Wedding");
+			
+			String endpoint_response = getPSFromLE(wedding);
+			
+			response = "{\"fulfillmentText\": \"Οι σχετικές με τον Γάμο Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
+			
 			System.out.println(wedding);
 		}
 		else {
@@ -78,13 +101,15 @@ public class ServiceController {
 			response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
 		}
 		else if(cost.isEmpty() && !documents.isEmpty()) {
-			//method get documents
+			String text = getInputsFromPS("ps0004");
+			//response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
+			response = "{\"fulfillmentText\": \"Τα δικαιολογητικά της ps0004 που θα χρειαστούν είναι: "+text+"\""+"}";
 		}
 		else if(!cost.isEmpty() && documents.isEmpty()){
 			//method get cost
 			String text = getCostFromPS("ps0004");
 			//response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
-			response = "{\"fulfillmentText\": \"Πληροφορίες σχετικά με "+text+"\""+"}";
+			response = "{\"fulfillmentText\": \"Το κόστος είναι: "+text+"\""+"}";
 			
 		}
 		else {
@@ -122,7 +147,50 @@ public class ServiceController {
         return results.toString();
 
 
-    }
+    	}
+	
+	public static String getInputsFromPS(String PS_URI){
+        String s2 = "prefix cpsv: <http://purl.org/vocab/cpsv#>\n" +
+                    "select distinct ?PS_input\n" +
+                    "where{\n" +
+                    "<http://data.dai.uom.gr:8890/PublicServices/id/ps/"+PS_URI+"> cpsv:hasInput ?PS_input .\n" +
+	            "}\n" +
+	            "";
+		
+		
+		
+        Query query = QueryFactory.create(s2); //s2 = the query above
+        QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.dai.uom.gr:8890/sparql", query );
+        ResultSet results = qExe.execSelect();
+        ResultSetFormatter.out(System.out, results, query);
+        
+        return results.toString();
+
+
+    	}
+
+	public static String getPSFromLE(String LE_URI){
+        String s2 = "prefix cv: <http://data.europa.eu/m8g/>\n" +
+		    "prefix cpsv: <http://purl.org/vocab/cpsv#>\n" +
+                    "select distinct ?PS_URI\n" +
+                    "where{\n" +
+                    "?PS_URI a cpsv:PublicService .\n" +
+		    "?PS_URI cv:isGroupedBy <http://data.dai.uom.gr:8890/PublicServices/id/ps/"+LE_URI+"> .\n" +
+	            "}\n" +
+		    "order by(?PS_URI)\n" +
+	            "";
+	
+
+		
+        Query query = QueryFactory.create(s2); //s2 = the query above
+        QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.dai.uom.gr:8890/sparql", query );
+        ResultSet results = qExe.execSelect();
+        ResultSetFormatter.out(System.out, results, query);
+        
+        return results.toString();
+
+
+    	}
 	
 	
 }
