@@ -143,8 +143,10 @@ public class ServiceController {
         QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.dai.uom.gr:8890/sparql", query );
         ResultSet results = qExe.execSelect();
         ResultSetFormatter.out(System.out, results, query);
+        String text = ResultSetFormatter.asText(results);
+        System.out.println(text);
         
-        return results.toString();
+        return text;
 
 
     	}
@@ -162,9 +164,10 @@ public class ServiceController {
         Query query = QueryFactory.create(s2); //s2 = the query above
         QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.dai.uom.gr:8890/sparql", query );
         ResultSet results = qExe.execSelect();
-        ResultSetFormatter.out(System.out, results, query);
+        String text = ResultSetFormatter.asText(results);
+        //System.out.println(text);
         
-        return results.toString();
+        return text;
 
 
     	}
@@ -186,9 +189,10 @@ public class ServiceController {
         QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.dai.uom.gr:8890/sparql", query );
         ResultSet results = qExe.execSelect();
         ResultSetFormatter.out(System.out, results, query);
+        String text = ResultSetFormatter.asText(results);
+        //System.out.println(text);
         
-        return results.toString();
-
+        return text;
 
     	}
 	
