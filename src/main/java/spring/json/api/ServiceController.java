@@ -144,7 +144,6 @@ public class ServiceController {
 		//Find out what user need papers or cost
 		String documents = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Documents");
 		String cost = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Cost");
-		String ps_uri = obj.getJSONObject("queryResult").getJSONObject("outputContexts").getJSONObject("parameters").getString("PublicService");
 		String response2 = "";
 
 		if(cost.isEmpty() && documents.isEmpty()) {
@@ -157,6 +156,7 @@ public class ServiceController {
 		}
 		else if(!cost.isEmpty() && documents.isEmpty()){
 			//method get cost
+			String ps_uri = obj.getJSONObject("queryResult").getJSONObject("outputContexts").getJSONObject("parameters").getString("PublicService");
 			JSONArray endpoint_response = getCostFromPS(ps_uri);
 			//only one cost value so index = 0
 			JSONObject jsonObject2 = endpoint_response.getJSONObject(0);
