@@ -58,13 +58,26 @@ public class ServiceController {
 				JSONObject jsonObject2 = endpoint_response.getJSONObject(i);
 				String value1 = jsonObject2.getJSONObject("PS_name").getString("value");
 				System.out.println(value1);
-				final_message = final_message + "      {\n" + 
+				if (i<endpoint_response.length()-1){
+					final_message = final_message + "      {\n" + 
 						"        \"text\": {\n" + 
 						"          \"text\": [\n" + 
 						"            \""+value1+"\"\n" + 
 						"          ]\n" + 
 						"        }\n" + 
 						"      },\n";
+				}
+				else{
+					final_message = final_message + "      {\n" + 
+						"        \"text\": {\n" + 
+						"          \"text\": [\n" + 
+						"            \""+value1+"\"\n" + 
+						"          ]\n" + 
+						"        }\n" + 
+						"      }\n";
+				}
+				
+					
 			}
 
 		final_message = final_message + "    ]},";
