@@ -273,10 +273,12 @@ public class ServiceController {
 	public static String getPSFromLE(String LE_URI){
 		String s2 = "prefix cv: <http://data.europa.eu/m8g/>\n" +
 				"prefix cpsv: <http://purl.org/vocab/cpsv#>\n" +
-				"select distinct ?PS_URI\n" +
+				"prefix dct: <http://purl.org/dc/terms>\n" +
+				"select distinct ?PS_name\n" +
 				"where{\n" +
 				"?PS_URI a cpsv:PublicService .\n" +
 				"?PS_URI cv:isGroupedBy <http://data.dai.uom.gr:8890/PublicServices/id/le/"+LE_URI+"> .\n" +
+				"?PS_URI dct:title ?PS_name .\n" +
 				"}\n" +
 				"order by(?PS_URI)\n" +
 				"";
