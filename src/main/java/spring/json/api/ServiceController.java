@@ -42,48 +42,56 @@ public class ServiceController {
 		System.out.println(intent);
 		//get PS from life event
 		if(intent.equals("LE - Buy House")) {
+			String le_uri = "le0001";
 			String buyHouse = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("House");
+			String endpoint_response = getPSFromLE(le_uri);
+			response = "{\"fulfillmentText\": \"Οι σχετικές με την αγορά σπιτιού Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
 			System.out.println(buyHouse);
 
 		}
 		else if(intent.equals("LE - Divorce")){
+			String le_uri = "le0006";
 			String divorse = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Divorce");
-			String endpoint_response = getPSFromLE(divorse);
+			String endpoint_response = getPSFromLE(le_uri);
 
 			response = "{\"fulfillmentText\": \"Οι σχετικές με το διαζύγιο Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
 			System.out.println(divorse);
 		}
 		else if(intent.equals("LE - Lost Wallet")) {
+			String le_uri = "le0002";
 			String wallet = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Wallet");
 
-			String endpoint_response = getPSFromLE(wallet);
+			String endpoint_response = getPSFromLE(le_uri);
 
 			response = "{\"fulfillmentText\": \"Οι σχετικές με την απώλεια πορτοφολιου σας Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
 
 			System.out.println(wallet);
 		}
 		else if(intent.equals("LE - School Life")) {
+			String le_uri = "le0004";
 			String schoolLife = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("SchoolLife");
 
-			String endpoint_response = getPSFromLE(schoolLife);
+			String endpoint_response = getPSFromLE(le_uri);
 
 			response = "{\"fulfillmentText\": \"Οι σχετικές με την Σχολική Ζωή σας Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
 
 			System.out.println(schoolLife);
 		}
 		else if(intent.equals("LE - Travel")) {
+			String le_uri = "le0005";
 			String travel = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Travel");
 
-			String endpoint_response = getPSFromLE(travel);
+			String endpoint_response = getPSFromLE(le_uri);
 
 			response = "{\"fulfillmentText\": \"Οι σχετικές με Ταξίδι Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
 
 			System.out.println(travel);
 		}
 		else if(intent.equals("LE - Wedding")){
+			String le_uri = "le0003";
 			String wedding = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Wedding");
 
-			String endpoint_response = getPSFromLE(wedding);
+			String endpoint_response = getPSFromLE(le_uri);
 
 			response = "{\"fulfillmentText\": \"Οι σχετικές με τον Γάμο Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
 
@@ -100,19 +108,19 @@ public class ServiceController {
 		String cost = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Cost");
 
 		if(cost.isEmpty() && documents.isEmpty()) {
-			response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
+			response2 = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
 		}
 		else if(cost.isEmpty() && !documents.isEmpty()) {
 			String text = getInputsFromPS("ps0004");
 			//response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
-			response = "{\"fulfillmentText\": \"Τα δικαιολογητικά της ps0004 που θα χρειαστούν είναι: "+text+"\""+"}";
+			response2 = "{\"fulfillmentText\": \"Τα δικαιολογητικά της ps0004 που θα χρειαστούν είναι: "+text+"\""+"}";
 		}
 		else if(!cost.isEmpty() && documents.isEmpty()){
 			//method get cost
 			String text = getCostFromPS("ps0004");
 			//response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
 			//response = "{\"fulfillmentText\": \"Το κόστος είναι: "+text+"\""+"}";
-			response = "{\"fulfillmentText\": \"Απάντηση\",\n" + 
+			response2 = "{\"fulfillmentText\": \"Απάντηση\",\n" + 
 					"    \"fulfillmentMessages\": [\n" + 
 					"      {\n" + 
 					"        \"text\": {\n" + 
