@@ -156,7 +156,9 @@ public class ServiceController {
 		}
 		else if(!cost.isEmpty() && documents.isEmpty()){
 			//method get cost
-			String ps_uri = obj.getJSONObject("queryResult").getJSONObject("outputContexts").getJSONObject("parameters").getString("PublicService");
+			JSONArray ps_uri_json = obj.getJSONObject("queryResult").getJSONObject("outputContexts").getJSONObject("parameters").getJSONArray("PublicService");
+			JSONObject ps_uri_obj = ps_uri_json.getJSONObject(0);
+			String ps_uri = ps_uri_obj.toString();
 			JSONArray endpoint_response = getCostFromPS(ps_uri);
 			//only one cost value so index = 0
 			JSONObject jsonObject2 = endpoint_response.getJSONObject(0);
@@ -165,7 +167,7 @@ public class ServiceController {
 			//response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
 			//response = "{\"fulfillmentText\": \"Το κόστος είναι: "+text+"\""+"}";
 			
-			response2 = final_message;
+			response = final_message;
 			
 		}
 		else {
