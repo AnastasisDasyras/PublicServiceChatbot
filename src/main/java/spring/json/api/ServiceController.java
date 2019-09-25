@@ -39,7 +39,7 @@ public class ServiceController {
 
 
 		String reqObject = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-		//System.out.println("request json object = "+reqObject);
+		System.out.println("request json object = "+reqObject);
 
 		//convert raw text to json object
 		JSONObject obj = new JSONObject(reqObject);
