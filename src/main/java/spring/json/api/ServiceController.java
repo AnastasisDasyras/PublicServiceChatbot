@@ -165,7 +165,7 @@ public class ServiceController {
 			//String ps_uri = obj.getString("queryResult");
 			//System.out.println(ps_uri);
 			//String ps_uri = "ps0157";
-			JSONArray endpoint_response = getCostFromPS(ps_uri);
+			JSONArray endpoint_response = getCostFromPS(ps_uri_string);
 			//only one cost value so index = 0
 			jsonObject2 = endpoint_response.getJSONObject(0);
 			String cost_value = jsonObject2.getJSONObject("Our_value").getString("value");
