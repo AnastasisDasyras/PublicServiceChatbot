@@ -161,13 +161,13 @@ public class ServiceController {
 			JSONObject jsonObject2 = (JSONObject) ps_uri.get(0);
 			Object jsonObject3 = jsonObject2.getJSONObject("parameters").get("PublicService");
 			JSONArray ps_uri_arr = (JSONArray) jsonObject3;
-			String ps_uri = ps_uri_arr.get(0)
+			String ps_uri_string = (String) ps_uri_arr.get(0);
 			//String ps_uri = obj.getString("queryResult");
 			//System.out.println(ps_uri);
 			//String ps_uri = "ps0157";
 			JSONArray endpoint_response = getCostFromPS(ps_uri);
 			//only one cost value so index = 0
-			JSONObject jsonObject2 = endpoint_response.getJSONObject(0);
+			jsonObject2 = endpoint_response.getJSONObject(0);
 			String cost_value = jsonObject2.getJSONObject("Our_value").getString("value");
 			String final_message = "{\"fulfillmentText\": \"Το κόστος είναι: "+cost_value+"\""+"}";
 			//response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
