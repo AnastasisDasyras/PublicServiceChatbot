@@ -18,6 +18,12 @@ import org.apache.jena.query.ResultSetFormatter;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 @RestController
 @RequestMapping(value = "/service", method = RequestMethod.POST)
@@ -44,9 +50,26 @@ public class ServiceController {
 		if(intent.equals("LE - Buy House")) {
 			String le_uri = "le0001";
 			String buyHouse = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("House");
-			String endpoint_response = getPSFromLE(le_uri);
-			response = "{\"fulfillmentText\": \"Οι σχετικές με την αγορά σπιτιού Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
-			System.out.println(buyHouse);
+			JSONArray endpoint_response = getPSFromLE(le_uri);
+			String final_message = "{\"fulfillmentText\": \"Απάντηση\",\n" + 
+				"    \"fulfillmentMessages\": [\n"; 
+		
+			for(int i=0;i<endpoint_response.length();i++) {
+				JSONObject jsonObject2 = endpoint_response.getJSONObject(i);
+				String value1 = jsonObject2.getJSONObject("PS_name").getString("value");
+				System.out.println(value1);
+				final_message = final_message + "      {\n" + 
+						"        \"text\": {\n" + 
+						"          \"text\": [\n" + 
+						"            \""+value1+"\"\n" + 
+						"          ]\n" + 
+						"        }\n" + 
+						"      },\n";
+			}
+
+		final_message = final_message + "    ]},";
+		
+		response = final_message;
 
 		}
 		else if(intent.equals("LE - Divorce")){
@@ -270,7 +293,7 @@ public class ServiceController {
 
 	}
 
-	public static String getPSFromLE(String LE_URI){
+	public static JSONArray getPSFromLE(String LE_URI){
 		String s2 = "prefix cv: <http://data.europa.eu/m8g/>\n" +
 				"prefix cpsv: <http://purl.org/vocab/cpsv#>\n" +
 				"prefix dct: <http://purl.org/dc/terms/>\n" +
@@ -288,13 +311,22 @@ public class ServiceController {
 		Query query = QueryFactory.create(s2); //s2 = the query above
 		QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.dai.uom.gr:8890/sparql", query );
 		ResultSet results = qExe.execSelect();
-		ResultSetFormatter.out(System.out, results, query);
-		String text = ResultSetFormatter.asText(results);
-		//System.out.println(text);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-		return text;
+		ResultSetFormatter.outputAsJSON(outputStream, results);
+		
+		// and turn that into a String
+		String json_string = new String(outputStream.toByteArray());
+
+		JSONObject jsonObject = new JSONObject(json_string);
+		JSONArray arr = jsonObject.getJSONObject("results").getJSONArray("bindings");
+		System.out.println(arr);
+
+		return arr;
 
 	}
+	
+	
 
 
 }
