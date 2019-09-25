@@ -77,7 +77,7 @@ public class ServiceController {
 			String divorse = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Divorce");
 			JSONArray endpoint_response = getPSFromLE(le_uri);
 
-			response = "{\"fulfillmentText\": \"Οι σχετικές με το διαζύγιο Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
+			response = "{\"fulfillmentText\": \"Οι σχετικές με το διαζύγιο Παρεχόμενες Υπηρεσίες είναι: "+divorse+"\""+"}";
 			System.out.println(divorse);
 		}
 		else if(intent.equals("LE - Lost Wallet")) {
@@ -129,22 +129,22 @@ public class ServiceController {
 		//Find out what user need papers or cost
 		String documents = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Documents");
 		String cost = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Cost");
-		//String response2 = "";
+		String response2 = "";
 
 		if(cost.isEmpty() && documents.isEmpty()) {
-			response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
+			response2 = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
 		}
 		else if(cost.isEmpty() && !documents.isEmpty()) {
 			String text = getInputsFromPS("ps0004");
 			//response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
-			response = "{\"fulfillmentText\": \"Τα δικαιολογητικά της ps0004 που θα χρειαστούν είναι: "+text+"\""+"}";
+			response2 = "{\"fulfillmentText\": \"Τα δικαιολογητικά της ps0004 που θα χρειαστούν είναι: "+text+"\""+"}";
 		}
 		else if(!cost.isEmpty() && documents.isEmpty()){
 			//method get cost
 			String text = getCostFromPS("ps0004");
 			//response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
 			//response = "{\"fulfillmentText\": \"Το κόστος είναι: "+text+"\""+"}";
-			response = "{\"fulfillmentText\": \"Απάντηση\",\n" + 
+			response2 = "{\"fulfillmentText\": \"Απάντηση\",\n" + 
 					"    \"fulfillmentMessages\": [\n" + 
 					"      {\n" + 
 					"        \"text\": {\n" + 
