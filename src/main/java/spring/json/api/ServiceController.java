@@ -75,7 +75,7 @@ public class ServiceController {
 		else if(intent.equals("LE - Divorce")){
 			String le_uri = "le0006";
 			String divorse = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Divorce");
-			String endpoint_response = getPSFromLE(le_uri);
+			JSONArray endpoint_response = getPSFromLE(le_uri);
 
 			response = "{\"fulfillmentText\": \"Οι σχετικές με το διαζύγιο Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
 			System.out.println(divorse);
@@ -84,7 +84,7 @@ public class ServiceController {
 			String le_uri = "le0002";
 			String wallet = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Wallet");
 
-			String endpoint_response = getPSFromLE(le_uri);
+			JSONArray endpoint_response = getPSFromLE(le_uri);
 
 			response = "{\"fulfillmentText\": \"Οι σχετικές με την απώλεια πορτοφολιου σας Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
 
@@ -94,7 +94,7 @@ public class ServiceController {
 			String le_uri = "le0004";
 			String schoolLife = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("SchoolLife");
 
-			String endpoint_response = getPSFromLE(le_uri);
+			JSONArray endpoint_response = getPSFromLE(le_uri);
 
 			response = "{\"fulfillmentText\": \"Οι σχετικές με την Σχολική Ζωή σας Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
 
@@ -104,7 +104,7 @@ public class ServiceController {
 			String le_uri = "le0005";
 			String travel = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Travel");
 
-			String endpoint_response = getPSFromLE(le_uri);
+			JSONArray endpoint_response = getPSFromLE(le_uri);
 
 			response = "{\"fulfillmentText\": \"Οι σχετικές με Ταξίδι Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
 
@@ -114,7 +114,7 @@ public class ServiceController {
 			String le_uri = "le0003";
 			String wedding = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Wedding");
 
-			String endpoint_response = getPSFromLE(le_uri);
+			JSONArray endpoint_response = getPSFromLE(le_uri);
 
 			response = "{\"fulfillmentText\": \"Οι σχετικές με τον Γάμο Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
 
