@@ -144,6 +144,7 @@ public class ServiceController {
 		//Find out what user need papers or cost
 		String documents = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Documents");
 		String cost = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Cost");
+		String ps_uri = obj.getJSONObject("queryResult").getJSONObject("outputContexts").getJSONObject("parameters").getString("PublicService");
 		String response2 = "";
 
 		if(cost.isEmpty() && documents.isEmpty()) {
@@ -156,97 +157,12 @@ public class ServiceController {
 		}
 		else if(!cost.isEmpty() && documents.isEmpty()){
 			//method get cost
-			String text = getCostFromPS("ps0004");
+			JSONArray endpoint_response = getCostFromPS(ps_uri);
+			String cost_value = jsonObject2.getJSONObject("Our_value").getString("value");
+			String final_message = "{\"fulfillmentText\": \"Το κόστος είναι: "+cost_value+"\""+"}";
 			//response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
 			//response = "{\"fulfillmentText\": \"Το κόστος είναι: "+text+"\""+"}";
-			response2 = "{\"fulfillmentText\": \"Απάντηση\",\n" + 
-					"    \"fulfillmentMessages\": [\n" + 
-					"      {\n" + 
-					"        \"text\": {\n" + 
-					"          \"text\": [\n" + 
-					"            \"κόστος1\"\n" + 
-					"          ]\n" + 
-					"        }\n" + 
-					"      },\n" + 
-					"      {\n" + 
-					"        \"text\": {\n" + 
-					"          \"text\": [\n" + 
-					"            \"κοστοσ2\"\n" + 
-					"          ]\n" + 
-					"        }\n" + 
-					"      },\n" + 
-					"		{\n" + 
-					"        \"text\": {\n" + 
-					"          \"text\": [\n" + 
-					"            \"κόστος3\"\n" + 
-					"          ]\n" + 
-					"        }\n" + 
-					"      },\n" + 
-					"      {\n" + 
-					"        \"text\": {\n" + 
-					"          \"text\": [\n" + 
-					"            \"κοστοσ4\"\n" + 
-					"          ]\n" + 
-					"        }\n" + 
-					"      },\n" + 
-					"		{\n" + 
-					"        \"text\": {\n" + 
-					"          \"text\": [\n" + 
-					"            \"κόστος5\"\n" + 
-					"          ]\n" + 
-					"        }\n" + 
-					"      },\n" + 
-					"      {\n" + 
-					"        \"text\": {\n" + 
-					"          \"text\": [\n" + 
-					"            \"κοστοσ6\"\n" + 
-					"          ]\n" + 
-					"        }\n" + 
-					"      },\n" + 
-					"		{\n" + 
-					"        \"text\": {\n" + 
-					"          \"text\": [\n" + 
-					"            \"κόστος7\"\n" + 
-					"          ]\n" + 
-					"        }\n" + 
-					"      },\n" + 
-					"      {\n" + 
-					"        \"text\": {\n" + 
-					"          \"text\": [\n" + 
-					"            \"κοστοσ8\"\n" + 
-					"          ]\n" + 
-					"        }\n" + 
-					"      },\n" + 
-					"		{\n" + 
-					"        \"text\": {\n" + 
-					"          \"text\": [\n" + 
-					"            \"κόστος9\"\n" + 
-					"          ]\n" + 
-					"        }\n" + 
-					"      },\n" + 
-					"      {\n" + 
-					"        \"text\": {\n" + 
-					"          \"text\": [\n" + 
-					"            \"κοστοσ10\"\n" + 
-					"          ]\n" + 
-					"        }\n" + 
-					"      },\n" + 
-					"		{\n" + 
-					"        \"text\": {\n" + 
-					"          \"text\": [\n" + 
-					"            \"κόστος11\"\n" + 
-					"          ]\n" + 
-					"        }\n" + 
-					"      },\n" + 
-					"      {\n" + 
-					"        \"text\": {\n" + 
-					"          \"text\": [\n" + 
-					"            \"κοστοσ12\"\n" + 
-					"          ]\n" + 
-					"        }\n" + 
-					"      }\n" + 
-					"    ]},";
-
+			
 		}
 		else {
 			//method get cost and papers
@@ -265,12 +181,14 @@ public class ServiceController {
 
 	}
 
-	public static String getCostFromPS(String PS_URI){
+	public static JSONArray getCostFromPS(String PS_URI){
 		String s2 = "prefix cv: <http://data.europa.eu/m8g/>\n" +
-				"select distinct ?PS_cost\n" +
+				"select distinct ?Our_value\n" +
 				"where{\n" +
+				"GRAPH <http://data.dai.uom.gr:8890/CPSV-Chatbot>{\n" +
 				"<http://data.dai.uom.gr:8890/PublicServices/id/ps/"+PS_URI+"> cv:hasCost ?PS_cost .\n" +
-				"}\n" +
+				"?PS_cost cv:value ?Our_value .\n" +
+				"}}\n" +
 				"";
 
 
@@ -278,11 +196,21 @@ public class ServiceController {
 		Query query = QueryFactory.create(s2); //s2 = the query above
 		QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.dai.uom.gr:8890/sparql", query );
 		ResultSet results = qExe.execSelect();
-		ResultSetFormatter.out(System.out, results, query);
-		String text = ResultSetFormatter.asText(results);
-		System.out.println(text);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-		return text;
+		ResultSetFormatter.outputAsJSON(outputStream, results);
+
+		// and turn that into a String
+		String json_string = new String(outputStream.toByteArray());
+
+		//System.out.println(json_string);
+		
+		JSONObject jsonObject = new JSONObject(json_string);
+		JSONArray arr = jsonObject.getJSONObject("results").getJSONArray("bindings");
+		System.out.println(arr);
+
+		return arr;
+
 
 
 	}
