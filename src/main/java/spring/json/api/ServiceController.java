@@ -158,10 +158,14 @@ public class ServiceController {
 		else if(!cost.isEmpty() && documents.isEmpty()){
 			//method get cost
 			JSONArray endpoint_response = getCostFromPS(ps_uri);
+			//only one cost value so index = 0
+			JSONObject jsonObject2 = endpoint_response.getJSONObject(0);
 			String cost_value = jsonObject2.getJSONObject("Our_value").getString("value");
 			String final_message = "{\"fulfillmentText\": \"Το κόστος είναι: "+cost_value+"\""+"}";
 			//response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
 			//response = "{\"fulfillmentText\": \"Το κόστος είναι: "+text+"\""+"}";
+			
+			response = final_message;
 			
 		}
 		else {
