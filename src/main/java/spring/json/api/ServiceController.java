@@ -61,13 +61,15 @@ public class ServiceController {
 				final_message = final_message + "      {\n" + 
 						"        \"text\": {\n" + 
 						"          \"text\": [\n" + 
-						"            \"κόστος1\"\n" + 
+						"            \""+value1+"\"\n" + 
 						"          ]\n" + 
 						"        }\n" + 
 						"      },\n";
 			}
 
 		final_message = final_message + "    ]},";
+			
+		System.out.println(final_message);
 		
 		response = final_message;
 
