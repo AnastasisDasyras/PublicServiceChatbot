@@ -61,7 +61,7 @@ public class ServiceController {
 				final_message = final_message + "      {\n" + 
 						"        \"text\": {\n" + 
 						"          \"text\": [\n" + 
-						"            \""+value1+"\"\n" + 
+						"            \"κόστος1\"\n" + 
 						"          ]\n" + 
 						"        }\n" + 
 						"      },\n";
