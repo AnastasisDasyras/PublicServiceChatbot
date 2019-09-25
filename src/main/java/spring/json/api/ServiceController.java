@@ -273,7 +273,7 @@ public class ServiceController {
 	public static String getPSFromLE(String LE_URI){
 		String s2 = "prefix cv: <http://data.europa.eu/m8g/>\n" +
 				"prefix cpsv: <http://purl.org/vocab/cpsv#>\n" +
-				"prefix dct: <http://purl.org/dc/terms>\n" +
+				"prefix dct: <http://purl.org/dc/terms/>\n" +
 				"select distinct ?PS_name\n" +
 				"where{\n" +
 				"?PS_URI a cpsv:PublicService .\n" +
