@@ -129,22 +129,22 @@ public class ServiceController {
 		//Find out what user need papers or cost
 		String documents = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Documents");
 		String cost = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Cost");
-		String response2 = "";
+		//String response2 = "";
 
 		if(cost.isEmpty() && documents.isEmpty()) {
-			response2 = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
+			response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
 		}
 		else if(cost.isEmpty() && !documents.isEmpty()) {
 			String text = getInputsFromPS("ps0004");
 			//response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
-			response2 = "{\"fulfillmentText\": \"Τα δικαιολογητικά της ps0004 που θα χρειαστούν είναι: "+text+"\""+"}";
+			response = "{\"fulfillmentText\": \"Τα δικαιολογητικά της ps0004 που θα χρειαστούν είναι: "+text+"\""+"}";
 		}
 		else if(!cost.isEmpty() && documents.isEmpty()){
 			//method get cost
 			String text = getCostFromPS("ps0004");
 			//response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
 			//response = "{\"fulfillmentText\": \"Το κόστος είναι: "+text+"\""+"}";
-			response2 = "{\"fulfillmentText\": \"Απάντηση\",\n" + 
+			response = "{\"fulfillmentText\": \"Απάντηση\",\n" + 
 					"    \"fulfillmentMessages\": [\n" + 
 					"      {\n" + 
 					"        \"text\": {\n" + 
@@ -241,7 +241,7 @@ public class ServiceController {
 		//response = "{\"fulfillmentText\": \"Πληροφορίες σχετικά με "+intent+"\""+"}";
 		byte[] enc = response.getBytes("UTF-8");
 
-		System.out.println(enc.toString());
+		//System.out.println(enc.toString());
 		//Get service cost
 		//ServiceResponse sr = new ServiceResponse(service);
 		//String cost = sr.getCost();
