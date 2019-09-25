@@ -267,7 +267,7 @@ public class ServiceController {
 				"select distinct ?PS_URI\n" +
 				"where{\n" +
 				"?PS_URI a cpsv:PublicService .\n" +
-				"?PS_URI cv:isGroupedBy <http://data.dai.uom.gr:8890/PublicServices/id/ps/"+LE_URI+"> .\n" +
+				"?PS_URI cv:isGroupedBy <http://data.dai.uom.gr:8890/PublicServices/id/le/"+LE_URI+"> .\n" +
 				"}\n" +
 				"order by(?PS_URI)\n" +
 				"";
