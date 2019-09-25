@@ -39,7 +39,7 @@ public class ServiceController {
 
 
 		String reqObject = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-		System.out.println("request json object = "+reqObject);
+		//System.out.println("request json object = "+reqObject);
 
 		//convert raw text to json object
 		JSONObject obj = new JSONObject(reqObject);
@@ -51,49 +51,24 @@ public class ServiceController {
 			String le_uri = "le0001";
 			String buyHouse = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("House");
 			JSONArray endpoint_response = getPSFromLE(le_uri);
-			String final_message = "{\"fulfillmentText\": \"Απάντηση\",\n" + 
-				"    \"fulfillmentMessages\": [\n"; 
-		
-			for(int i=0;i<endpoint_response.length();i++) {
-				JSONObject jsonObject2 = endpoint_response.getJSONObject(i);
-				String value1 = jsonObject2.getJSONObject("PS_name").getString("value");
-				System.out.println(value1);
-				if (i<endpoint_response.length()-1){
-					final_message = final_message + "      {\n" + 
-						"        \"text\": {\n" + 
-						"          \"text\": [\n" + 
-						"            \""+value1+"\"\n" + 
-						"          ]\n" + 
-						"        }\n" + 
-						"      },\n";
-				}
-				else{
-					final_message = final_message + "      {\n" + 
-						"        \"text\": {\n" + 
-						"          \"text\": [\n" + 
-						"            \""+value1+"\"\n" + 
-						"          ]\n" + 
-						"        }\n" + 
-						"      }\n";
-				}
-				
-					
-			}
-
-		final_message = final_message + "    ]},";
+			String final_message = printRespo(endpoint_response);
 			
-		System.out.println(final_message);
+			
+			System.out.println(final_message);
 		
-		response = final_message;
+			response = final_message;
 
 		}
 		else if(intent.equals("LE - Divorce")){
 			String le_uri = "le0006";
 			String divorse = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Divorce");
 			JSONArray endpoint_response = getPSFromLE(le_uri);
-
-			response = "{\"fulfillmentText\": \"Οι σχετικές με το διαζύγιο Παρεχόμενες Υπηρεσίες είναι: "+divorse+"\""+"}";
-			System.out.println(divorse);
+			
+			String final_message = printRespo(endpoint_response);
+			System.out.println(final_message);
+			
+			response = final_message;
+			
 		}
 		else if(intent.equals("LE - Lost Wallet")) {
 			String le_uri = "le0002";
@@ -101,9 +76,10 @@ public class ServiceController {
 
 			JSONArray endpoint_response = getPSFromLE(le_uri);
 
-			response = "{\"fulfillmentText\": \"Οι σχετικές με την απώλεια πορτοφολιου σας Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
-
-			System.out.println(wallet);
+			String final_message = printRespo(endpoint_response);
+			System.out.println(final_message);
+			
+			response = final_message;
 		}
 		else if(intent.equals("LE - School Life")) {
 			String le_uri = "le0004";
@@ -111,9 +87,10 @@ public class ServiceController {
 
 			JSONArray endpoint_response = getPSFromLE(le_uri);
 
-			response = "{\"fulfillmentText\": \"Οι σχετικές με την Σχολική Ζωή σας Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
-
-			System.out.println(schoolLife);
+			String final_message = printRespo(endpoint_response);
+			System.out.println(final_message);
+			
+			response = final_message;
 		}
 		else if(intent.equals("LE - Travel")) {
 			String le_uri = "le0005";
@@ -121,9 +98,10 @@ public class ServiceController {
 
 			JSONArray endpoint_response = getPSFromLE(le_uri);
 
-			response = "{\"fulfillmentText\": \"Οι σχετικές με Ταξίδι Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
-
-			System.out.println(travel);
+			String final_message = printRespo(endpoint_response);
+			System.out.println(final_message);
+			
+			response = final_message;
 		}
 		else if(intent.equals("LE - Wedding")){
 			String le_uri = "le0003";
@@ -131,9 +109,10 @@ public class ServiceController {
 
 			JSONArray endpoint_response = getPSFromLE(le_uri);
 
-			response = "{\"fulfillmentText\": \"Οι σχετικές με τον Γάμο Παρεχόμενες Υπηρεσίες είναι: "+endpoint_response+"\""+"}";
-
-			System.out.println(wedding);
+			String final_message = printRespo(endpoint_response);
+			System.out.println(final_message);
+			
+			response = final_message;
 		}
 		else {
 			//user send the name of a public service
@@ -150,28 +129,52 @@ public class ServiceController {
 			response2 = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
 		}
 		else if(cost.isEmpty() && !documents.isEmpty()) {
-			String text = getInputsFromPS("ps0004");
-			//response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
-			response2 = "{\"fulfillmentText\": \"Τα δικαιολογητικά της ps0004 που θα χρειαστούν είναι: "+text+"\""+"}";
+			JSONArray ps_uri = obj.getJSONObject("queryResult").getJSONArray("outputContexts");
+			System.out.println(ps_uri.get(0));
+			JSONObject jsonObject2 = (JSONObject) ps_uri.get(0);
+			JSONObject jsonObject3 = jsonObject2.getJSONObject("parameters");
+			String ps_uri_string = jsonObject3.getString("PublicService");
+			System.out.println(ps_uri_string);
+			
+			JSONArray endpoint_response = getInputsFromPS(ps_uri_string);
+			
+			String cost_value = "Δεν υπάρχει τιμή";
+			if (!endpoint_response.isEmpty()) {
+				jsonObject2 = endpoint_response.getJSONObject(0);
+				cost_value = jsonObject2.getJSONObject("PS_input").getString("value");
+			}
+			
+			
+			String final_message = "{\"fulfillmentText\": \"Τα δικαιολογητικά είναι: "+cost_value+"\""+"}";
+			//response = "{\"fulfillmentText\": \"Ξ�ΞµΞ»ΞµΟ„Ξ­ Ο„Ξ± ΟƒΟ‡ΞµΟ„ΞΉΞΊΞ¬ Ο‡Ξ±Ο�Ο„ΞΉΞ¬, Ο„ΞΏ ΞΊΟ�ΟƒΟ„ΞΏΟ‚ Ξ® ΞΊΞ±ΞΉ Ο„Ξ± Ξ΄Ο�ΞΏ;\""+"}";
+			//response = "{\"fulfillmentText\": \"Ξ¤ΞΏ ΞΊΟ�ΟƒΟ„ΞΏΟ‚ ΞµΞ―Ξ½Ξ±ΞΉ: "+text+"\""+"}";
+			
+			response = final_message;
 		}
 		else if(!cost.isEmpty() && documents.isEmpty()){
 			//method get cost
 			JSONArray ps_uri = obj.getJSONObject("queryResult").getJSONArray("outputContexts");
-			//System.out.println(ps_uri.get(0));
+			System.out.println(ps_uri.get(0));
 			JSONObject jsonObject2 = (JSONObject) ps_uri.get(0);
-			Object jsonObject3 = jsonObject2.getJSONObject("parameters").get("PublicService");
-			JSONArray ps_uri_arr = (JSONArray) jsonObject3;
-			String ps_uri_string = (String) ps_uri_arr.get(0);
+			JSONObject jsonObject3 = jsonObject2.getJSONObject("parameters");
+			String ps_uri_string = jsonObject3.getString("PublicService");
+			System.out.println(ps_uri_string);
+			//String ps_uri_string = (String) ps_uri_arr.get(0);
 			//String ps_uri = obj.getString("queryResult");
 			//System.out.println(ps_uri);
 			//String ps_uri = "ps0157";
 			JSONArray endpoint_response = getCostFromPS(ps_uri_string);
 			//only one cost value so index = 0
-			jsonObject2 = endpoint_response.getJSONObject(0);
-			String cost_value = jsonObject2.getJSONObject("Our_value").getString("value");
+			String cost_value = "Δεν υπάρχει τιμή";
+			if (!endpoint_response.isEmpty()) {
+				jsonObject2 = endpoint_response.getJSONObject(0);
+				cost_value = jsonObject2.getJSONObject("Our_value").getString("value");
+			}
+			
+			
 			String final_message = "{\"fulfillmentText\": \"Το κόστος είναι: "+cost_value+"\""+"}";
-			//response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
-			//response = "{\"fulfillmentText\": \"Το κόστος είναι: "+text+"\""+"}";
+			//response = "{\"fulfillmentText\": \"Ξ�ΞµΞ»ΞµΟ„Ξ­ Ο„Ξ± ΟƒΟ‡ΞµΟ„ΞΉΞΊΞ¬ Ο‡Ξ±Ο�Ο„ΞΉΞ¬, Ο„ΞΏ ΞΊΟ�ΟƒΟ„ΞΏΟ‚ Ξ® ΞΊΞ±ΞΉ Ο„Ξ± Ξ΄Ο�ΞΏ;\""+"}";
+			//response = "{\"fulfillmentText\": \"Ξ¤ΞΏ ΞΊΟ�ΟƒΟ„ΞΏΟ‚ ΞµΞ―Ξ½Ξ±ΞΉ: "+text+"\""+"}";
 			
 			response = final_message;
 			
@@ -181,7 +184,7 @@ public class ServiceController {
 		}
 
 
-		//response = "{\"fulfillmentText\": \"Πληροφορίες σχετικά με "+intent+"\""+"}";
+		//response = "{\"fulfillmentText\": \"Ξ Ξ»Ξ·Ο�ΞΏΟ†ΞΏΟ�Ξ―ΞµΟ‚ ΟƒΟ‡ΞµΟ„ΞΉΞΊΞ¬ ΞΌΞµ "+intent+"\""+"}";
 		byte[] enc = response.getBytes("UTF-8");
 
 		//System.out.println(enc.toString());
@@ -227,7 +230,7 @@ public class ServiceController {
 
 	}
 
-	public static String getInputsFromPS(String PS_URI){
+	public static JSONArray getInputsFromPS(String PS_URI){
 		String s2 = "prefix cpsv: <http://purl.org/vocab/cpsv#>\n" +
 				"select distinct ?PS_input\n" +
 				"where{\n" +
@@ -240,10 +243,19 @@ public class ServiceController {
 		Query query = QueryFactory.create(s2); //s2 = the query above
 		QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.dai.uom.gr:8890/sparql", query );
 		ResultSet results = qExe.execSelect();
-		String text = ResultSetFormatter.asText(results);
-		//System.out.println(text);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-		return text;
+		ResultSetFormatter.outputAsJSON(outputStream, results);
+		
+		// and turn that into a String
+		String json_string = new String(outputStream.toByteArray());
+
+		JSONObject jsonObject = new JSONObject(json_string);
+		JSONArray arr = jsonObject.getJSONObject("results").getJSONArray("bindings");
+		System.out.println(arr);
+
+		return arr;
+		
 
 
 	}
@@ -279,6 +291,32 @@ public class ServiceController {
 
 		return arr;
 
+	}
+	
+	
+	public static String printRespo(JSONArray endpoint_response){
+		
+		String temp = "{\"fulfillmentText\": \"Οι σχετικές δημόσιες υπηρεσίες είναι (Επιλέξτε γράφοντας τον τίτλο): ";
+		
+		for(int i=0;i<endpoint_response.length();i++) {
+			JSONObject jsonObject2 = endpoint_response.getJSONObject(i);
+			String value1 = jsonObject2.getJSONObject("PS_name").getString("value");
+		
+			System.out.println(value1);
+			
+			if (i<endpoint_response.length()-1){
+				temp = temp +"▐ "+value1+" ▐ ";
+				
+				
+			}
+			else{
+				temp = temp + value1+"\"}";
+			}
+						
+		}
+		
+		
+		return temp;
 	}
 	
 	
