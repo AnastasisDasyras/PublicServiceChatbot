@@ -39,7 +39,7 @@ public class ServiceController {
 
 
 		String reqObject = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-		System.out.println("request json object = "+reqObject);
+		//System.out.println("request json object = "+reqObject);
 
 		//convert raw text to json object
 		JSONObject obj = new JSONObject(reqObject);
@@ -156,10 +156,15 @@ public class ServiceController {
 		}
 		else if(!cost.isEmpty() && documents.isEmpty()){
 			//method get cost
-			//String ps_uri = obj.getJSONObject("queryResult").getJSONObject("outputContexts").getJSONObject("parameters").getString("House");
+			JSONArray ps_uri = obj.getJSONObject("queryResult").getJSONArray("outputContexts");
+			//System.out.println(ps_uri.get(0));
+			JSONObject jsonObject2 = (JSONObject) ps_uri.get(0);
+			Object jsonObject3 = jsonObject2.getJSONObject("parameters").get("PublicService");
+			ps_uri_arr = (JSONArray) jsonObject3;
+			String ps_uri = ps_uri_arr.get(0)
 			//String ps_uri = obj.getString("queryResult");
 			//System.out.println(ps_uri);
-			String ps_uri = "ps0157";
+			//String ps_uri = "ps0157";
 			JSONArray endpoint_response = getCostFromPS(ps_uri);
 			//only one cost value so index = 0
 			JSONObject jsonObject2 = endpoint_response.getJSONObject(0);
