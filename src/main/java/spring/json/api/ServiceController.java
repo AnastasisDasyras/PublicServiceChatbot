@@ -241,7 +241,7 @@ public class ServiceController {
 		//response = "{\"fulfillmentText\": \"Πληροφορίες σχετικά με "+intent+"\""+"}";
 		byte[] enc = response.getBytes("UTF-8");
 
-		System.out.println(enc);
+		System.out.println(enc.toString());
 		//Get service cost
 		//ServiceResponse sr = new ServiceResponse(service);
 		//String cost = sr.getCost();
