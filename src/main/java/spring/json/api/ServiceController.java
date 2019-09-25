@@ -160,7 +160,7 @@ public class ServiceController {
 			//System.out.println(ps_uri.get(0));
 			JSONObject jsonObject2 = (JSONObject) ps_uri.get(0);
 			Object jsonObject3 = jsonObject2.getJSONObject("parameters").get("PublicService");
-			ps_uri_arr = (JSONArray) jsonObject3;
+			JSONArray ps_uri_arr = (JSONArray) jsonObject3;
 			String ps_uri = ps_uri_arr.get(0)
 			//String ps_uri = obj.getString("queryResult");
 			//System.out.println(ps_uri);
