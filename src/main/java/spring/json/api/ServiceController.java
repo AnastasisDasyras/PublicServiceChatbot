@@ -165,7 +165,7 @@ public class ServiceController {
 			//response = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
 			//response = "{\"fulfillmentText\": \"Το κόστος είναι: "+text+"\""+"}";
 			
-			response = final_message;
+			response2 = final_message;
 			
 		}
 		else {
