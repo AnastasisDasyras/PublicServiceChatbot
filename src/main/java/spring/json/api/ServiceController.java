@@ -156,7 +156,8 @@ public class ServiceController {
 		}
 		else if(!cost.isEmpty() && documents.isEmpty()){
 			//method get cost
-			String ps_uri = obj.getJSONObject("queryResult").getJSONObject("outputContexts").getJSONObject("parameters").getString("House");
+			//String ps_uri = obj.getJSONObject("queryResult").getJSONObject("outputContexts").getJSONObject("parameters").getString("House");
+			String ps_uri = obj.getString("queryResult");
 			System.out.println(ps_uri);
 			ps_uri = "ps0157";
 			JSONArray endpoint_response = getCostFromPS(ps_uri);
