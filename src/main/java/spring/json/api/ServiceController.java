@@ -232,6 +232,8 @@ public class ServiceController {
 
 	public static JSONArray getInputsFromPS(String PS_URI){
 		String s2 = "prefix cpsv: <http://purl.org/vocab/cpsv#>\n" +
+			    "prefix cv: <http://data.europa.eu/m8g/>\n" +
+			    "prefix dct: <http://purl.org/dc/terms/>\n" +
 				"select distinct ?PS_input\n" +
 				"where{\n" +
 				"GRAPH <http://data.dai.uom.gr:8890/CPSV-Chatbot>{\n" +
