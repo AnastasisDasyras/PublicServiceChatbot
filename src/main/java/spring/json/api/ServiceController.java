@@ -137,15 +137,15 @@ public class ServiceController {
 			System.out.println(ps_uri_string);
 			
 			JSONArray endpoint_response = getInputsFromPS(ps_uri_string);
-			
-			String cost_value = "Δεν υπάρχει τιμή";
+			String final_message = printinput(endpoint_response);
+			/*String cost_value = "Δεν υπάρχει τιμή";
 			if (!endpoint_response.isEmpty()) {
 				jsonObject2 = endpoint_response.getJSONObject(0);
 				cost_value = jsonObject2.getJSONObject("PS_input").getString("value");
 			}
 			
 			
-			String final_message = "{\"fulfillmentText\": \"Τα δικαιολογητικά είναι: "+cost_value+"\""+"}";
+			String final_message = "{\"fulfillmentText\": \"Τα δικαιολογητικά είναι: "+cost_value+"\""+"}";*/
 			//response = "{\"fulfillmentText\": \"Ξ�ΞµΞ»ΞµΟ„Ξ­ Ο„Ξ± ΟƒΟ‡ΞµΟ„ΞΉΞΊΞ¬ Ο‡Ξ±Ο�Ο„ΞΉΞ¬, Ο„ΞΏ ΞΊΟ�ΟƒΟ„ΞΏΟ‚ Ξ® ΞΊΞ±ΞΉ Ο„Ξ± Ξ΄Ο�ΞΏ;\""+"}";
 			//response = "{\"fulfillmentText\": \"Ξ¤ΞΏ ΞΊΟ�ΟƒΟ„ΞΏΟ‚ ΞµΞ―Ξ½Ξ±ΞΉ: "+text+"\""+"}";
 			
@@ -305,6 +305,32 @@ public class ServiceController {
 		for(int i=0;i<endpoint_response.length();i++) {
 			JSONObject jsonObject2 = endpoint_response.getJSONObject(i);
 			String value1 = jsonObject2.getJSONObject("PS_name").getString("value");
+		
+			System.out.println(value1);
+			
+			if (i<endpoint_response.length()-1){
+				temp = temp +"▐ "+value1+" ▐ ";
+				
+				
+			}
+			else{
+				temp = temp + value1+"\"}";
+			}
+						
+		}
+		
+		
+		return temp;
+	}
+	
+		
+	public static String printinput(JSONArray endpoint_response){
+		
+		String temp = "{\"fulfillmentText\": \"Τα δικαιολογητικά είναι: ";
+		
+		for(int i=0;i<endpoint_response.length();i++) {
+			JSONObject jsonObject2 = endpoint_response.getJSONObject(i);
+			String value1 = jsonObject2.getJSONObject("PS_input").getString("value");
 		
 			System.out.println(value1);
 			
