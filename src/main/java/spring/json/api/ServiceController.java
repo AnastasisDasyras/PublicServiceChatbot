@@ -236,7 +236,6 @@ public class ServiceController {
 			    "prefix dct: <http://purl.org/dc/terms/>\n" +
 				"select distinct ?PS_input\n" +
 				"where{\n" +
-				"GRAPH <http://data.dai.uom.gr:8890/CPSV-Chatbot>{\n" +
 				"<http://data.dai.uom.gr:8890/PublicServices/id/ps/"+PS_URI+"> cpsv:hasInput ?PS_input_ID .\n" +
 				"?PS_input_ID a cv:Evidence .\n" +
 				"?PS_input_ID dct:title ?PS_input .\n" +
