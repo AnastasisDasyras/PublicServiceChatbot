@@ -306,9 +306,9 @@ public class ServiceController {
 		for(int i=0;i<endpoint_response.length();i++) {
 			JSONObject jsonObject2 = endpoint_response.getJSONObject(i);
 			String value1 = "";
-			String replced = jsonObject2.getJSONObject("PS_name").getString("value");
+			String replaced_temp = jsonObject2.getJSONObject("PS_name").getString("value");
 			
-			value1 = replced.json_string.replace(""", " ");
+			value1 = replaced_temp.replace(""", " ");
 		
 			
 			System.out.println(value1);
