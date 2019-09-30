@@ -308,7 +308,7 @@ public class ServiceController {
 			String value1 = "";
 			String replaced_temp = jsonObject2.getJSONObject("PS_name").getString("value");
 			
-			value1 = replaced_temp.replace(""", " ");
+			value1 = replaced_temp.replace("/"", " ");
 		
 			
 			System.out.println(value1);
