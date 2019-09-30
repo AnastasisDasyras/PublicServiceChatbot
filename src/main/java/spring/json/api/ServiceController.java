@@ -288,8 +288,8 @@ public class ServiceController {
 		
 		// and turn that into a String
 		String json_string = new String(outputStream.toByteArray());
-		json_string.replace(""", "");
-		json_string.replace("'", "");
+		
+	
 		JSONObject jsonObject = new JSONObject(json_string);
 		JSONArray arr = jsonObject.getJSONObject("results").getJSONArray("bindings");
 		System.out.println(arr);
@@ -305,8 +305,12 @@ public class ServiceController {
 		
 		for(int i=0;i<endpoint_response.length();i++) {
 			JSONObject jsonObject2 = endpoint_response.getJSONObject(i);
-			String value1 = jsonObject2.getJSONObject("PS_name").getString("value");
+			String value1 = "";
+			String replced = jsonObject2.getJSONObject("PS_name").getString("value");
+			
+			value1 = replced.json_string.replace(""", " ");
 		
+			
 			System.out.println(value1);
 			
 			if (i<endpoint_response.length()-1){
