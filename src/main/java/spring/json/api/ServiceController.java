@@ -288,8 +288,8 @@ public class ServiceController {
 		
 		// and turn that into a String
 		String json_string = new String(outputStream.toByteArray());
-		json_string = json_string.replace("\"", "");
-		json_string = json_string.replace("\'", "");
+		json_string.replace(""", "");
+		json_string.replace("'", "");
 		JSONObject jsonObject = new JSONObject(json_string);
 		JSONArray arr = jsonObject.getJSONObject("results").getJSONArray("bindings");
 		System.out.println(arr);
