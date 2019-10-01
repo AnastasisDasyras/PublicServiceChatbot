@@ -123,12 +123,15 @@ public class ServiceController {
 		//Find out what user need papers or cost
 		String documents = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Documents");
 		String cost = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Cost");
+		String public_organization = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("PublicOrganization");
 		String response2 = "";
 
-		if(cost.isEmpty() && documents.isEmpty()) {
+		//Nothing Running
+		if(cost.isEmpty() && documents.isEmpty() && public_organization.isEmpty()) {
 			response2 = "{\"fulfillmentText\": \"Θελετέ τα σχετικά χαρτιά, το κόστος ή και τα δύο;\""+"}";
 		}
-		else if(cost.isEmpty() && !documents.isEmpty()) {
+		//Documents Running
+		else if(cost.isEmpty() && !documents.isEmpty() && public_organization.isEmpty()) {
 			JSONArray ps_uri = obj.getJSONObject("queryResult").getJSONArray("outputContexts");
 			System.out.println(ps_uri.get(0));
 			JSONObject jsonObject2 = (JSONObject) ps_uri.get(0);
@@ -138,20 +141,11 @@ public class ServiceController {
 			
 			JSONArray endpoint_response = getInputsFromPS(ps_uri_string);
 			String final_message = printinput(endpoint_response);
-			/*String cost_value = "Δεν υπάρχει τιμή";
-			if (!endpoint_response.isEmpty()) {
-				jsonObject2 = endpoint_response.getJSONObject(0);
-				cost_value = jsonObject2.getJSONObject("PS_input").getString("value");
-			}
-			
-			
-			String final_message = "{\"fulfillmentText\": \"Τα δικαιολογητικά είναι: "+cost_value+"\""+"}";*/
-			//response = "{\"fulfillmentText\": \"Ξ�ΞµΞ»ΞµΟ„Ξ­ Ο„Ξ± ΟƒΟ‡ΞµΟ„ΞΉΞΊΞ¬ Ο‡Ξ±Ο�Ο„ΞΉΞ¬, Ο„ΞΏ ΞΊΟ�ΟƒΟ„ΞΏΟ‚ Ξ® ΞΊΞ±ΞΉ Ο„Ξ± Ξ΄Ο�ΞΏ;\""+"}";
-			//response = "{\"fulfillmentText\": \"Ξ¤ΞΏ ΞΊΟ�ΟƒΟ„ΞΏΟ‚ ΞµΞ―Ξ½Ξ±ΞΉ: "+text+"\""+"}";
-			
+						
 			response = final_message;
 		}
-		else if(!cost.isEmpty() && documents.isEmpty()){
+		//Cost Running
+		else if(!cost.isEmpty() && documents.isEmpty() && public_organization.isEmpty()){
 			//method get cost
 			JSONArray ps_uri = obj.getJSONObject("queryResult").getJSONArray("outputContexts");
 			System.out.println(ps_uri.get(0));
@@ -173,18 +167,40 @@ public class ServiceController {
 			
 			
 			String final_message = "{\"fulfillmentText\": \"Το κόστος είναι: "+cost_value+"\""+"}";
-			//response = "{\"fulfillmentText\": \"Ξ�ΞµΞ»ΞµΟ„Ξ­ Ο„Ξ± ΟƒΟ‡ΞµΟ„ΞΉΞΊΞ¬ Ο‡Ξ±Ο�Ο„ΞΉΞ¬, Ο„ΞΏ ΞΊΟ�ΟƒΟ„ΞΏΟ‚ Ξ® ΞΊΞ±ΞΉ Ο„Ξ± Ξ΄Ο�ΞΏ;\""+"}";
-			//response = "{\"fulfillmentText\": \"Ξ¤ΞΏ ΞΊΟ�ΟƒΟ„ΞΏΟ‚ ΞµΞ―Ξ½Ξ±ΞΉ: "+text+"\""+"}";
+			
 			
 			response = final_message;
 			
+		}
+		//Public Organization Running
+		else if(cost.isEmpty() && documents.isEmpty() && !public_organization.isEmpty()){
+			JSONArray ps_uri = obj.getJSONObject("queryResult").getJSONArray("outputContexts");
+			System.out.println(ps_uri.get(0));
+			JSONObject jsonObject2 = (JSONObject) ps_uri.get(0);
+			JSONObject jsonObject3 = jsonObject2.getJSONObject("parameters");
+			String ps_uri_string = jsonObject3.getString("PublicService");
+			System.out.println(ps_uri_string);
+			
+			JSONArray endpoint_response = getPublicOrganizationFromPS(ps_uri_string);
+			
+			String organization = "Δεν υπάρχει τιμή";
+			if (!endpoint_response.isEmpty()) {
+				jsonObject2 = endpoint_response.getJSONObject(0);
+				organization = jsonObject2.getJSONObject("PublicAuthority").getString("value");
+			}
+			
+			
+			String final_message = "{\"fulfillmentText\": \"Το κόστος είναι: "+organization+"\""+"}";
+			
+			
+			response = final_message;
 		}
 		else {
 			//method get cost and papers
 		}
 
 
-		//response = "{\"fulfillmentText\": \"Ξ Ξ»Ξ·Ο�ΞΏΟ†ΞΏΟ�Ξ―ΞµΟ‚ ΟƒΟ‡ΞµΟ„ΞΉΞΊΞ¬ ΞΌΞµ "+intent+"\""+"}";
+		
 		byte[] enc = response.getBytes("UTF-8");
 
 		//System.out.println(enc.toString());
@@ -207,6 +223,44 @@ public class ServiceController {
 				"";
 
 
+
+		Query query = QueryFactory.create(s2); //s2 = the query above
+		QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.dai.uom.gr:8890/sparql", query );
+		ResultSet results = qExe.execSelect();
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+		ResultSetFormatter.outputAsJSON(outputStream, results);
+
+		// and turn that into a String
+		String json_string = new String(outputStream.toByteArray());
+
+		//System.out.println(json_string);
+		
+		JSONObject jsonObject = new JSONObject(json_string);
+		JSONArray arr = jsonObject.getJSONObject("results").getJSONArray("bindings");
+		System.out.println(arr);
+
+		return arr;
+
+
+
+	}
+
+	public static JSONArray getPublicOrganizationFromPS(String PS_URI){
+		String s2 = "prefix cv: <http://data.europa.eu/m8g/>\n" +
+		            "prefix cpsv: <http://purl.org/vocab/cpsv#>\n" +
+ 			    "prefix dct: <http://purl.org/dc/terms/>\n" +
+
+				"select distinct ?PublicAuthority\n" +
+				"where{\n" +
+				"GRAPH <http://data.dai.uom.gr:8890/CPSV-Chatbot>{\n" +
+				"<http://data.dai.uom.gr:8890/PublicServices/id/ps/ps0100> cv:hasCompetentAuthority ?CompetentAuthorityURI .\n" +
+				"?CompetentAuthorityURI a cv:PublicOrganisation .\n" +
+				"?CompetentAuthorityURI dct:title ?PublicAuthority .\n" +
+				"}}\n" +
+				"";
+		
+	
 
 		Query query = QueryFactory.create(s2); //s2 = the query above
 		QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.dai.uom.gr:8890/sparql", query );
@@ -354,7 +408,8 @@ public class ServiceController {
 		return temp;
 	}
 	
-	
+		
+		
 
 
 }
