@@ -191,7 +191,7 @@ public class ServiceController {
 			}
 			
 			
-			String final_message = "{\"fulfillmentText\": \"Το κόστος είναι: "+organization+"\""+"}";
+			String final_message = "{\"fulfillmentText\": \"Ο αρμόδιος φορέας είναι: "+organization+"\""+"}";
 			
 			
 			response = final_message;
@@ -255,7 +255,7 @@ public class ServiceController {
 				"select distinct ?PublicAuthority\n" +
 				"where{\n" +
 				"GRAPH <http://data.dai.uom.gr:8890/CPSV-Chatbot>{\n" +
-				"<http://data.dai.uom.gr:8890/PublicServices/id/ps/ps0100> cv:hasCompetentAuthority ?CompetentAuthorityURI .\n" +
+				"<http://data.dai.uom.gr:8890/PublicServices/id/ps/"+PS_URI+"> cv:hasCompetentAuthority ?CompetentAuthorityURI .\n" +
 				"?CompetentAuthorityURI a cv:PublicOrganisation .\n" +
 				"?CompetentAuthorityURI dct:title ?PublicAuthority .\n" +
 				"}}\n" +
