@@ -123,8 +123,7 @@ public class ServiceController {
 		//Find out what user need papers or cost
 		String documents = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Documents");
 		String cost = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("Cost");
-		String public_organization = "";
-			//obj.getJSONObject("queryResult").getJSONObject("parameters").getString("PublicOrganization");
+		String public_organization = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("PublicOrganization");
 		String response2 = "";
 
 		//Nothing Running
