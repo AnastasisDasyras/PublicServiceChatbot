@@ -49,7 +49,7 @@ public class ServiceController {
 		//get PS from life event
 		if(intent.equals("LE - Buy House")) {
 			String le_uri = "le0001";
-			String buyHouse = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("House");
+			String buyHouse = obj.getJSONObject("queryResult").getJSONObject("parameters").getString("SchoolLife");
 			JSONArray endpoint_response = getPSFromLE(le_uri);
 			String final_message = printRespo(endpoint_response);
 			
